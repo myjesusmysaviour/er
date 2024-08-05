@@ -1,0 +1,181 @@
+<html><head><base href="https://aestheticmusicideas.com/">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Aesthetic Music Idea Generator</title>
+<style>
+  :root {
+    --primary-color: #4ecdc4;
+    --secondary-color: #ff6b6b;
+    --background-color: #f5f7fa;
+    --text-color: #333;
+    --container-bg: rgba(255, 255, 255, 0.9);
+  }
+
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    background: linear-gradient(135deg, var(--background-color) 0%, #c3cfe2 100%);
+    color: var(--text-color);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 1rem;
+  }
+
+  .container {
+    background: var(--container-bg);
+    border-radius: 20px;
+    padding: 2rem;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 600px;
+  }
+
+  h1 {
+    font-size: clamp(1.5rem, 5vw, 2.5rem);
+    margin-bottom: 1rem;
+    text-align: center;
+    background: linear-gradient(45deg, var(--secondary-color), var(--primary-color));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    color: transparent;
+  }
+
+  input[type="text"] {
+    width: 100%;
+    padding: 0.8rem;
+    margin-bottom: 1rem;
+    border: 2px solid var(--primary-color);
+    border-radius: 10px;
+    font-size: 1rem;
+  }
+
+  button {
+    background: var(--primary-color);
+    color: white;
+    border: none;
+    padding: 0.8rem 1.5rem;
+    font-size: 1rem;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background 0.3s ease, transform 0.1s ease;
+    width: 100%;
+  }
+
+  button:hover {
+    background: #45b7aa;
+  }
+
+  button:active {
+    transform: scale(0.98);
+  }
+
+  #result {
+    margin-top: 2rem;
+    padding: 1rem;
+    background: rgba(78, 205, 196, 0.1);
+    border-radius: 10px;
+    font-style: italic;
+    word-wrap: break-word;
+  }
+
+  .music-note {
+    position: fixed;
+    font-size: clamp(1rem, 4vw, 2rem);
+    opacity: 0;
+    animation: float 3s ease-in-out infinite;
+    pointer-events: none;
+  }
+
+  @keyframes float {
+    0%, 100% { transform: translateY(0); opacity: 0; }
+    50% { transform: translateY(-20px); opacity: 1; }
+  }
+
+  @media (max-width: 480px) {
+    .container {
+      padding: 1.5rem;
+    }
+
+    input[type="text"], button {
+      font-size: 0.9rem;
+    }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>Aesthetic Music Idea Generator</h1>
+  <input type="text" id="prompt" placeholder="Enter a mood, theme, or concept...">
+  <button onclick="generateIdea()">Generate Music Idea</button>
+  <div id="result"></div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+<script>
+  const musicIdeas = [
+    "A dreamy synthwave track with echoing vocals",
+    "An ambient piece inspired by rainforest sounds",
+    "A lo-fi hip hop beat with jazzy piano samples",
+    "An orchestral composition with electronic elements",
+    "A minimalist piano piece with subtle field recordings",
+    "An upbeat indie pop song with handclaps and ukulele",
+    "A futuristic trap beat with glitchy effects",
+    "A neo-soul track with vintage synth pads",
+    "An experimental noise piece using household objects",
+    "A cinematic post-rock song with crescendoing guitars"
+  ];
+
+  function generateIdea() {
+    const prompt = document.getElementById('prompt').value;
+    const result = document.getElementById('result');
+    const randomIdea = musicIdeas[Math.floor(Math.random() * musicIdeas.length)];
+    result.innerHTML = `Based on "${prompt}": ${randomIdea}`;
+    createMusicNotes();
+  }
+
+  function createMusicNotes() {
+    const notes = ['♪', '♫', '♬', '♩', '♭', '♮'];
+    const container = document.querySelector('.container');
+    const rect = container.getBoundingClientRect();
+
+    for (let i = 0; i < 10; i++) {
+      const note = document.createElement('div');
+      note.classList.add('music-note');
+      note.textContent = notes[Math.floor(Math.random() * notes.length)];
+      
+      const x = rect.left + Math.random() * rect.width;
+      const y = rect.top + Math.random() * rect.height;
+      
+      note.style.left = `${x}px`;
+      note.style.top = `${y}px`;
+      document.body.appendChild(note);
+
+      anime({
+        targets: note,
+        opacity: [0, 1],
+        translateY: [0, -50],
+        duration: 2000,
+        easing: 'easeInOutQuad',
+        complete: () => {
+          document.body.removeChild(note);
+        }
+      });
+    }
+  }
+
+  // Ensure music notes are positioned correctly on window resize
+  window.addEventListener('resize', () => {
+    const notes = document.querySelectorAll('.music-note');
+    notes.forEach(note => document.body.removeChild(note));
+  });
+</script>
+</body>
+</html>
